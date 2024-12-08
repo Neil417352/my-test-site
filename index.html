@@ -10,15 +10,25 @@
 <body>
     <h1>欢迎来到我的测试网站</h1>
     <p>这里将集成Coze Web SDK。</p>
-</body>      <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
-      <script>
-          new CozeWebSDK.WebChatClient({
+    
+    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
+    <script>
+        const cozeWebSDK = new CozeWebSDK.WebChatClient({
             config: {
-              bot_id: '7414539767288872966',
+                botId: '7414539767288872966'  // 注意这里是 botId 而不是 bot_id
             },
-            componentProps: {
-              title: 'Coze',
+            auth: {
+                type: 'token',
+                token: 'pat_CrX5FPOln2wDMoCey5qP7QyAHcw2cRTQ56xalk1N27196ZNeDsubo6FC4ptnJn7m',
+                onRefreshToken: () => 'pat_CrX5FPOln2wDMoCey5qP7QyAHcw2cRTQ56xalk1N27196ZNeDsubo6FC4ptnJn7m'
             },
-          });
-      </script>
+            ui: {
+                chatBot: {
+                    title: 'Coze',
+                    uploadable: true
+                }
+            }
+        });
+    </script>
+</body>
 </html>
