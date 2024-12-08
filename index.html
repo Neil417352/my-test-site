@@ -15,7 +15,7 @@
     <script>
         const cozeWebSDK = new CozeWebSDK.WebChatClient({
             config: {
-                botId: '7414539767288872966'  // 注意这里是 botId 而不是 bot_id
+                botId: '7414539767288872966'
             },
             auth: {
                 type: 'token',
@@ -23,12 +23,23 @@
                 onRefreshToken: () => 'pat_CrX5FPOln2wDMoCey5qP7QyAHcw2cRTQ56xalk1N27196ZNeDsubo6FC4ptnJn7m'
             },
             ui: {
+                base: {
+                    layout: 'mobile',  // 强制使用移动端布局
+                    lang: 'zh-CN'      // 设置中文界面
+                },
                 chatBot: {
-                    title: 'Coze',
-                    uploadable: true
+                    title: 'Coze AI Agent',  // 设置标题
+                    uploadable: true,
+                    width: '100%'      // 设置宽度为100%
+                },
+                asstBtn: {
+                    isNeed: false      // 隐藏右下角的悬浮按钮
                 }
             }
         });
+
+        // 直接显示聊天窗口
+        cozeWebSDK.showChatBot();
     </script>
 </body>
 </html>
