@@ -5,6 +5,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <title>AI 智能助手 - 登录/注册</title>
    <style>
+       /* CSS 样式保持不变 */
        * {
            margin: 0;
            padding: 0;
@@ -16,7 +17,6 @@
            min-height: 100vh;
            display: flex;
            flex-direction: column;
-           overflow: hidden;
        }
 
        .auth-container {
@@ -136,11 +136,9 @@
            position: fixed;
            top: 0;
            left: 0;
-           width: 100vw;
-           height: 100vh;
+           width: 100%;
+           height: 100%;
            background: white;
-           z-index: 9999;
-           overflow: hidden;
        }
 
        @media (max-width: 768px) {
@@ -154,11 +152,6 @@
 
            .right-panel {
                min-height: 200px;
-           }
-
-           .chat-container {
-               height: 100vh;
-               width: 100vw;
            }
        }
    </style>
@@ -271,6 +264,8 @@
        // 注册表单处理
        document.getElementById('registerFormElement').addEventListener('submit', function(e) {
            e.preventDefault();
+           // 这里添加注册逻辑
+           // 验证邀请码等
            alert('注册功能待实现');
        });
 
@@ -296,34 +291,10 @@
            // 初始化 Coze SDK
            const cozeWebSDK = new CozeWebSDK.WebChatClient({
                config: {
-                   botId: '7446282665017655301'
+                   bot_id: '7446282665017655301'
                },
-               ui: {
-                   base: {
-                       layout: isMobile() ? 'mobile' : 'pc',
-                       zIndex: 1000,
-                       lang: 'zh-CN'
-                   },
-                   chatBot: {
-                       title: '孔明AI助手',
-                       uploadable: true,
-                       shortcutQuickReply: true,
-                       shortcutQuickReplyList: [
-                           "没有写完,把刚才的风格搭配也编出给我",
-                           "好的,现在仅输出完整的文案给到我",
-                           "请用更口语化的方式改写",
-                           "把这段文字改得更简洁有力",
-                           "媲媲建议,更贴近孔老师",
-                           "在结尾加一个段情感升华",
-                           "把这段内容拆分成三个要点"
-                       ]
-                   },
-                   asstBtn: {
-                       isNeed: false
-                   }
-               },
-               userInfo: {
-                   nickname: '访客'
+               componentProps: {
+                   title: 'Coze'
                }
            });
 
