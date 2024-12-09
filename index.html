@@ -5,7 +5,6 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <title>AI 智能助手 - 登录/注册</title>
    <style>
-       /* CSS 样式保持不变 */
        * {
            margin: 0;
            padding: 0;
@@ -17,6 +16,7 @@
            min-height: 100vh;
            display: flex;
            flex-direction: column;
+           overflow: hidden; /* 防止滚动 */
        }
 
        .auth-container {
@@ -136,9 +136,10 @@
            position: fixed;
            top: 0;
            left: 0;
-           width: 100%;
-           height: 100%;
+           width: 100vw;
+           height: 100vh;
            background: white;
+           z-index: 9999;
        }
 
        @media (max-width: 768px) {
@@ -152,6 +153,15 @@
 
            .right-panel {
                min-height: 200px;
+           }
+
+           .chat-container {
+               position: fixed;
+               width: 100vw;
+               height: 100vh;
+               left: 0;
+               top: 0;
+               padding: 0;
            }
        }
    </style>
@@ -264,8 +274,6 @@
        // 注册表单处理
        document.getElementById('registerFormElement').addEventListener('submit', function(e) {
            e.preventDefault();
-           // 这里添加注册逻辑
-           // 验证邀请码等
            alert('注册功能待实现');
        });
 
@@ -298,14 +306,17 @@
                        layout: isMobile() ? 'mobile' : 'pc',
                        zIndex: 1000
                    },
+                   asstBtn: {
+                       isNeed: false // 禁用浮动按钮
+                   },
                    chatBot: {
-                       title: 'Coze',
+                       title: '九暮朋友圈定制写手',
                        uploadable: true,
-                       width: 460,
-                       // 启用快捷建议功能
-                       quickSuggestion: {
-                           enable: true,  // 启用快捷建议
-                           suggestions: [
+                       width: window.innerWidth,
+                       height: window.innerHeight,
+                       quickPrompt: {
+                           enable: true,
+                           prompts: [
                                "没有写完,把刚才的风格搭配也编出给我",
                                "好的,现在仅输出完整的文案给到我",
                                "请用更口语化的方式改写",
