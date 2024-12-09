@@ -5,6 +5,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <title>AI 智能助手 - 登录/注册</title>
    <style>
+       /* CSS 样式保持不变 */
        * {
            margin: 0;
            padding: 0;
@@ -290,12 +291,31 @@
            // 初始化 Coze SDK
            const cozeWebSDK = new CozeWebSDK.WebChatClient({
                config: {
-                   bot_id: '7446282665017655301'
+                   botId: '7446282665017655301'
                },
-               componentProps: {
-                   title: 'Coze',
-                   enableShortcut: true,
-                   placeholderText: '这里有一些快捷指令'
+               ui: {
+                   base: {
+                       layout: isMobile() ? 'mobile' : 'pc',
+                       zIndex: 1000
+                   },
+                   chatBot: {
+                       title: 'Coze',
+                       uploadable: true,
+                       width: 460,
+                       // 启用快捷建议功能
+                       quickSuggestion: {
+                           enable: true,  // 启用快捷建议
+                           suggestions: [
+                               "没有写完,把刚才的风格搭配也编出给我",
+                               "好的,现在仅输出完整的文案给到我",
+                               "请用更口语化的方式改写",
+                               "把这段文字改得更简洁有力",
+                               "媲媲建议,更贴近孔老师",
+                               "在结尾加一个段情感升华",
+                               "把这段内容拆分成三个要点"
+                           ]
+                       }
+                   }
                }
            });
 
