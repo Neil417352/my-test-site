@@ -1,331 +1,331 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AI 智能助手 - 登录/注册</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+   <title>AI 智能助手 - 登录/注册</title>
+   <style>
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+       body {
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+           min-height: 100vh;
+           display: flex;
+           flex-direction: column;
+       }
 
-        .auth-container {
-            display: flex;
-            min-height: 100vh;
-            width: 100%;
-        }
+       .auth-container {
+           display: flex;
+           min-height: 100vh;
+           width: 100%;
+       }
 
-        .left-panel, .right-panel {
-            flex: 1;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
+       .left-panel, .right-panel {
+           flex: 1;
+           padding: 2rem;
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           align-items: center;
+       }
 
-        .left-panel {
-            background: white;
-        }
+       .left-panel {
+           background: white;
+       }
 
-        .right-panel {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
-            color: white;
-        }
+       .right-panel {
+           background: linear-gradient(135deg, #ff6b6b 0%, #ff4757 100%);
+           color: white;
+       }
 
-        .form-container {
-            width: 100%;
-            max-width: 400px;
-        }
+       .form-container {
+           width: 100%;
+           max-width: 400px;
+       }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+       .form-group {
+           margin-bottom: 1.5rem;
+       }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            color: #333;
-            font-weight: 500;
-        }
+       .form-group label {
+           display: block;
+           margin-bottom: 0.5rem;
+           color: #333;
+           font-weight: 500;
+       }
 
-        .form-group input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
+       .form-group input {
+           width: 100%;
+           padding: 0.8rem;
+           border: 1px solid #ddd;
+           border-radius: 6px;
+           font-size: 1rem;
+           transition: border-color 0.3s;
+       }
 
-        .form-group input:focus {
-            border-color: #ff4757;
-            outline: none;
-        }
+       .form-group input:focus {
+           border-color: #ff4757;
+           outline: none;
+       }
 
-        .btn {
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+       .btn {
+           width: 100%;
+           padding: 0.8rem;
+           border: none;
+           border-radius: 6px;
+           font-size: 1rem;
+           font-weight: 500;
+           cursor: pointer;
+           transition: background 0.3s;
+       }
 
-        .btn-primary {
-            background: #ff4757;
-            color: white;
-        }
+       .btn-primary {
+           background: #ff4757;
+           color: white;
+       }
 
-        .btn-outline {
-            background: transparent;
-            border: 2px solid white;
-            color: white;
-        }
+       .btn-outline {
+           background: transparent;
+           border: 2px solid white;
+           color: white;
+       }
 
-        .social-login {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
+       .social-login {
+           display: flex;
+           justify-content: center;
+           gap: 1rem;
+           margin: 1.5rem 0;
+       }
 
-        .social-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
+       .social-icon {
+           width: 40px;
+           height: 40px;
+           border-radius: 50%;
+           border: 1px solid #ddd;
+           display: flex;
+           align-items: center;
+           justify-content: center;
+           cursor: pointer;
+           transition: background 0.3s;
+       }
 
-        .welcome-text {
-            text-align: center;
-            margin-bottom: 2rem;
-        }
+       .welcome-text {
+           text-align: center;
+           margin-bottom: 2rem;
+       }
 
-        .welcome-text h2 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
+       .welcome-text h2 {
+           font-size: 2rem;
+           margin-bottom: 1rem;
+       }
 
-        .error-message {
-            color: #ff4757;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            display: none;
-        }
+       .error-message {
+           color: #ff4757;
+           font-size: 0.9rem;
+           margin-top: 0.5rem;
+           display: none;
+       }
 
-        .chat-container {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-        }
+       .chat-container {
+           display: none;
+           position: fixed;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background: white;
+       }
 
-        @media (max-width: 768px) {
-            .auth-container {
-                flex-direction: column;
-            }
+       @media (max-width: 768px) {
+           .auth-container {
+               flex-direction: column;
+           }
 
-            .left-panel, .right-panel {
-                padding: 1rem;
-            }
+           .left-panel, .right-panel {
+               padding: 1rem;
+           }
 
-            .right-panel {
-                min-height: 200px;
-            }
-        }
-    </style>
+           .right-panel {
+               min-height: 200px;
+           }
+       }
+   </style>
 </head>
 <body>
-    <div class="auth-container" id="authContainer">
-        <!-- 登录面板 -->
-        <div class="left-panel" id="loginPanel">
-            <div class="form-container">
-                <div class="welcome-text">
-                    <h2>登录</h2>
-                    <p>使用账户进行登录</p>
-                </div>
-                
-                <form id="loginForm">
-                    <div class="form-group">
-                        <label for="loginUsername">用户名</label>
-                        <input type="text" id="loginUsername" name="username" placeholder="请输入用户名" required>
-                        <div class="error-message" id="login-username-error"></div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="loginPassword">密码</label>
-                        <input type="password" id="loginPassword" name="password" placeholder="请输入密码" required>
-                        <div class="error-message" id="login-password-error"></div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">登录</button>
-                </form>
+   <div class="auth-container" id="authContainer">
+       <!-- 登录面板 -->
+       <div class="left-panel" id="loginPanel">
+           <div class="form-container">
+               <div class="welcome-text">
+                   <h2>登录</h2>
+                   <p>使用账户进行登录</p>
+               </div>
+               
+               <form id="loginForm">
+                   <div class="form-group">
+                       <label for="loginUsername">用户名</label>
+                       <input type="text" id="loginUsername" name="username" placeholder="请输入用户名" required>
+                       <div class="error-message" id="login-username-error"></div>
+                   </div>
+                   
+                   <div class="form-group">
+                       <label for="loginPassword">密码</label>
+                       <input type="password" id="loginPassword" name="password" placeholder="请输入密码" required>
+                       <div class="error-message" id="login-password-error"></div>
+                   </div>
+                   
+                   <button type="submit" class="btn btn-primary">登录</button>
+               </form>
 
-                <div class="social-login">
-                    <div class="social-icon">f</div>
-                    <div class="social-icon">G+</div>
-                    <div class="social-icon">in</div>
-                </div>
-            </div>
-        </div>
+               <div class="social-login">
+                   <div class="social-icon">f</div>
+                   <div class="social-icon">G+</div>
+                   <div class="social-icon">in</div>
+               </div>
+           </div>
+       </div>
 
-        <!-- 注册面板 -->
-        <div class="right-panel" id="registerPanel">
-            <div class="welcome-text">
-                <h2>Hello, Friend!</h2>
-                <p>关注AI，获取更多技术资讯~</p>
-                <button class="btn btn-outline" onclick="showRegisterForm()">注册</button>
-            </div>
-        </div>
+       <!-- 注册面板 -->
+       <div class="right-panel" id="registerPanel">
+           <div class="welcome-text">
+               <h2>Hello, Friend!</h2>
+               <p>关注AI，获取更多技术资讯~</p>
+               <button class="btn btn-outline" onclick="showRegisterForm()">注册</button>
+           </div>
+       </div>
 
-        <!-- 注册表单 -->
-        <div class="right-panel" id="registerForm" style="display: none;">
-            <div class="form-container">
-                <div class="welcome-text">
-                    <h2>注册账户</h2>
-                    <p>创建你的账户</p>
-                </div>
-                
-                <form id="registerFormElement">
-                    <div class="form-group">
-                        <label for="registerName">姓名</label>
-                        <input type="text" id="registerName" name="name" placeholder="请输入姓名" required>
-                    </div>
+       <!-- 注册表单 -->
+       <div class="right-panel" id="registerForm" style="display: none;">
+           <div class="form-container">
+               <div class="welcome-text">
+                   <h2>注册账户</h2>
+                   <p>创建你的账户</p>
+               </div>
+               
+               <form id="registerFormElement">
+                   <div class="form-group">
+                       <label for="registerName">姓名</label>
+                       <input type="text" id="registerName" name="name" placeholder="请输入姓名" required>
+                   </div>
 
-                    <div class="form-group">
-                        <label for="registerEmail">邮箱</label>
-                        <input type="email" id="registerEmail" name="email" placeholder="请输入邮箱" required>
-                    </div>
+                   <div class="form-group">
+                       <label for="registerEmail">邮箱</label>
+                       <input type="email" id="registerEmail" name="email" placeholder="请输入邮箱" required>
+                   </div>
 
-                    <div class="form-group">
-                        <label for="registerUsername">用户名</label>
-                        <input type="text" id="registerUsername" name="username" placeholder="请输入用户名" required>
-                    </div>
+                   <div class="form-group">
+                       <label for="registerUsername">用户名</label>
+                       <input type="text" id="registerUsername" name="username" placeholder="请输入用户名" required>
+                   </div>
 
-                    <div class="form-group">
-                        <label for="registerPassword">密码</label>
-                        <input type="password" id="registerPassword" name="password" placeholder="请输入密码" required>
-                    </div>
+                   <div class="form-group">
+                       <label for="registerPassword">密码</label>
+                       <input type="password" id="registerPassword" name="password" placeholder="请输入密码" required>
+                   </div>
 
-                    <div class="form-group">
-                        <label for="inviteCode">邀请码（必填）</label>
-                        <input type="text" id="inviteCode" name="inviteCode" placeholder="请输入邀请码" required>
-                    </div>
+                   <div class="form-group">
+                       <label for="inviteCode">邀请码（必填）</label>
+                       <input type="text" id="inviteCode" name="inviteCode" placeholder="请输入邀请码" required>
+                   </div>
 
-                    <button type="submit" class="btn btn-outline">注册</button>
-                    <button type="button" class="btn btn-outline" style="margin-top: 1rem;" onclick="showLoginForm()">返回登录</button>
-                </form>
-            </div>
-        </div>
-    </div>
+                   <button type="submit" class="btn btn-outline">注册</button>
+                   <button type="button" class="btn btn-outline" style="margin-top: 1rem;" onclick="showLoginForm()">返回登录</button>
+               </form>
+           </div>
+       </div>
+   </div>
 
-    <div id="chat-container" class="chat-container"></div>
+   <div id="chat-container" class="chat-container"></div>
 
-    <!-- Coze SDK -->
-    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
-    <script>
-        function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
+   <!-- Coze SDK -->
+   <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
+   <script>
+       function isMobile() {
+           return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+       }
 
-        function showRegisterForm() {
-            document.getElementById('loginPanel').style.display = 'none';
-            document.getElementById('registerPanel').style.display = 'none';
-            document.getElementById('registerForm').style.display = 'flex';
-        }
+       function showRegisterForm() {
+           document.getElementById('loginPanel').style.display = 'none';
+           document.getElementById('registerPanel').style.display = 'none';
+           document.getElementById('registerForm').style.display = 'flex';
+       }
 
-        function showLoginForm() {
-            document.getElementById('loginPanel').style.display = 'flex';
-            document.getElementById('registerPanel').style.display = 'flex';
-            document.getElementById('registerForm').style.display = 'none';
-        }
+       function showLoginForm() {
+           document.getElementById('loginPanel').style.display = 'flex';
+           document.getElementById('registerPanel').style.display = 'flex';
+           document.getElementById('registerForm').style.display = 'none';
+       }
 
-        // 注册表单处理
-        document.getElementById('registerFormElement').addEventListener('submit', function(e) {
-            e.preventDefault();
-            // 这里添加注册逻辑
-            // 验证邀请码等
-            alert('注册功能待实现');
-        });
+       // 注册表单处理
+       document.getElementById('registerFormElement').addEventListener('submit', function(e) {
+           e.preventDefault();
+           // 这里添加注册逻辑
+           // 验证邀请码等
+           alert('注册功能待实现');
+       });
 
-        // 登录表单处理
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('loginUsername').value;
-            const password = document.getElementById('loginPassword').value;
+       // 登录表单处理
+       document.getElementById('loginForm').addEventListener('submit', function(e) {
+           e.preventDefault();
+           
+           const username = document.getElementById('loginUsername').value;
+           const password = document.getElementById('loginPassword').value;
 
-            if (username.length < 3) {
-                document.getElementById('login-username-error').textContent = '用户名至少需要3个字符';
-                document.getElementById('login-username-error').style.display = 'block';
-                return;
-            }
+           if (username.length < 3) {
+               document.getElementById('login-username-error').textContent = '用户名至少需要3个字符';
+               document.getElementById('login-username-error').style.display = 'block';
+               return;
+           }
 
-            if (password.length < 6) {
-                document.getElementById('login-password-error').textContent = '密码至少需要6个字符';
-                document.getElementById('login-password-error').style.display = 'block';
-                return;
-            }
+           if (password.length < 6) {
+               document.getElementById('login-password-error').textContent = '密码至少需要6个字符';
+               document.getElementById('login-password-error').style.display = 'block';
+               return;
+           }
 
-            // 初始化 Coze SDK
-            const cozeWebSDK = new CozeWebSDK.WebChatClient({
-                config: {
-                    botId: '7414539767288872966'
-                },
-                auth: {
-                    type: 'token',
-                    token: 'pat_CrX5FPOln2wDMoCey5qP7QyAHcw2cRTQ56xalk1N27196ZNeDsubo6FC4ptnJn7m',
-                    onRefreshToken: () => 'pat_CrX5FPOln2wDMoCey5qP7QyAHcw2cRTQ56xalk1N27196ZNeDsubo6FC4ptnJn7m'
-                },
-                userInfo: {
-                    id: username,
-                    nickname: username,
-                    url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + username
-                },
-                ui: {
-                    base: {
-                        layout: isMobile() ? 'mobile' : 'pc',
-                        lang: 'zh-CN'
-                    },
-                    chatBot: {
-                        title: 'AI 智能助手',
-                        uploadable: true,
-                        width: '100%',
-                        height: '100%'
-                    },
-                    asstBtn: {
-                        isNeed: false
-                    }
-                }
-            });
+           // 初始化 Coze SDK
+           const cozeWebSDK = new CozeWebSDK.WebChatClient({
+               config: {
+                   botId: '7446282665017655301'
+               },
+               auth: {
+                   type: 'token',
+                   token: 'pat_CrX5FPOln2wDMoCey5qP7QyAHcw2cRTQ56xalk1N27196ZNeDsubo6FC4ptnJn7m',
+                   onRefreshToken: () => 'pat_CrX5FPOln2wDMoCey5qP7QyAHcw2cRTQ56xalk1N27196ZNeDsubo6FC4ptnJn7m'
+               },
+               userInfo: {
+                   id: username,
+                   nickname: username,
+                   url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + username
+               },
+               ui: {
+                   base: {
+                       layout: isMobile() ? 'mobile' : 'pc',
+                       lang: 'zh-CN'
+                   },
+                   chatBot: {
+                       title: 'AI 智能助手',
+                       uploadable: true,
+                       width: '100%',
+                       height: '100%'
+                   },
+                   asstBtn: {
+                       isNeed: false
+                   }
+               }
+           });
 
-            // 隐藏登录界面，显示聊天界面
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('chat-container').style.display = 'block';
-            
-            // 显示聊天窗口
-            cozeWebSDK.showChatBot();
-        });
-    </script>
+           // 隐藏登录界面，显示聊天界面
+           document.getElementById('authContainer').style.display = 'none';
+           document.getElementById('chat-container').style.display = 'block';
+           
+           // 显示聊天窗口
+           cozeWebSDK.showChatBot();
+       });
+   </script>
 </body>
 </html>
