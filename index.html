@@ -5,6 +5,7 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
    <title>AI 智能助手 - 登录/注册</title>
    <style>
+       /* CSS 样式保持不变 */
        * {
            margin: 0;
            padding: 0;
@@ -290,32 +291,10 @@
            // 初始化 Coze SDK
            const cozeWebSDK = new CozeWebSDK.WebChatClient({
                config: {
-                   botId: '7446282665017655301'
+                   bot_id: '7446282665017655301'
                },
-               auth: {
-                   type: 'token',
-                   token: 'pat_HqF5MAwnER9DU2exl086ANp03AgNGuZQ0ASmN2xoR3ugepMjFnfqFqtmJKnbtcJx',
-                   onRefreshToken: () => 'pat_HqF5MAwnER9DU2exl086ANp03AgNGuZQ0ASmN2xoR3ugepMjFnfqFqtmJKnbtcJx'
-               },
-               userInfo: {
-                   id: username,
-                   nickname: username,
-                   url: 'https://api.dicebear.com/7.x/avataaars/svg?seed=' + username
-               },
-               ui: {
-                   base: {
-                       layout: isMobile() ? 'mobile' : 'pc',
-                       lang: 'zh-CN'
-                   },
-                   chatBot: {
-                       title: 'AI 智能助手',
-                       uploadable: true,
-                       width: '100%',
-                       height: '100%'
-                   },
-                   asstBtn: {
-                       isNeed: false
-                   }
+               componentProps: {
+                   title: 'Coze'
                }
            });
 
