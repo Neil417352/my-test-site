@@ -16,7 +16,7 @@
            min-height: 100vh;
            display: flex;
            flex-direction: column;
-           overflow: hidden; /* 防止滚动 */
+           overflow: hidden;
        }
 
        .auth-container {
@@ -140,6 +140,7 @@
            height: 100vh;
            background: white;
            z-index: 9999;
+           overflow: hidden;
        }
 
        @media (max-width: 768px) {
@@ -156,12 +157,8 @@
            }
 
            .chat-container {
-               position: fixed;
-               width: 100vw;
                height: 100vh;
-               left: 0;
-               top: 0;
-               padding: 0;
+               width: 100vw;
            }
        }
    </style>
@@ -304,29 +301,29 @@
                ui: {
                    base: {
                        layout: isMobile() ? 'mobile' : 'pc',
-                       zIndex: 1000
-                   },
-                   asstBtn: {
-                       isNeed: false // 禁用浮动按钮
+                       zIndex: 1000,
+                       lang: 'zh-CN'
                    },
                    chatBot: {
-                       title: '九暮朋友圈定制写手',
+                       title: '孔明AI助手',
                        uploadable: true,
-                       width: window.innerWidth,
-                       height: window.innerHeight,
-                       quickPrompt: {
-                           enable: true,
-                           prompts: [
-                               "没有写完,把刚才的风格搭配也编出给我",
-                               "好的,现在仅输出完整的文案给到我",
-                               "请用更口语化的方式改写",
-                               "把这段文字改得更简洁有力",
-                               "媲媲建议,更贴近孔老师",
-                               "在结尾加一个段情感升华",
-                               "把这段内容拆分成三个要点"
-                           ]
-                       }
+                       shortcutQuickReply: true,
+                       shortcutQuickReplyList: [
+                           "没有写完,把刚才的风格搭配也编出给我",
+                           "好的,现在仅输出完整的文案给到我",
+                           "请用更口语化的方式改写",
+                           "把这段文字改得更简洁有力",
+                           "媲媲建议,更贴近孔老师",
+                           "在结尾加一个段情感升华",
+                           "把这段内容拆分成三个要点"
+                       ]
+                   },
+                   asstBtn: {
+                       isNeed: false
                    }
+               },
+               userInfo: {
+                   nickname: '访客'
                }
            });
 
