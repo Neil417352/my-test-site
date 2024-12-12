@@ -11,9 +11,12 @@
             box-sizing: border-box;
         }
 
-        body {
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            min-height: 100vh;
         }
 
         #chat-container {
@@ -21,8 +24,45 @@
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             background: white;
+        }
+
+        /* 桌面端样式 */
+        @media screen and (min-width: 768px) {
+            #chat-container {
+                height: 100vh;
+                width: 100vw;
+            }
+        }
+
+        /* 移动端样式 */
+        @media screen and (max-width: 767px) {
+            #chat-container {
+                height: 100vh;
+                width: 100vw;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+            }
+
+            /* 防止iOS滚动回弹 */
+            body {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                overflow: hidden;
+                -webkit-overflow-scrolling: touch;
+            }
+        }
+
+        /* 确保iframe全屏 */
+        iframe {
+            width: 100% !important;
+            height: 100% !important;
+            border: none !important;
         }
     </style>
 </head>
@@ -32,19 +72,34 @@
     <!-- Coze SDK -->
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
     <script>
-        // 初始化 Coze SDK
         window.onload = function() {
+            // 检测是否为移动设备
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+            
             const cozeWebSDK = new CozeWebSDK.WebChatClient({
                 config: {
                     bot_id: '7446282665017655301'
                 },
                 componentProps: {
-                    title: 'Coze'
+                    title: 'AI 智能助手',
+                    // 移动端使用全屏模式
+                    fullScreen: isMobile
                 }
             });
             
-            // 直接显示聊天窗口
+            // 显示聊天窗口
             cozeWebSDK.showChatBot();
+
+            // 处理移动端键盘弹出时的视图问题
+            if (isMobile) {
+                window.addEventListener('resize', function() {
+                    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
+                        window.setTimeout(function() {
+                            document.activeElement.scrollIntoView();
+                        }, 0);
+                    }
+                });
+            }
         };
     </script>
 </body>
