@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Coze Web SDK Demo</title>
+    <title>Kongbei Web SDK Demo</title>
     <style>
         body {
             font-family: sans-serif;
@@ -43,7 +43,7 @@
             right: 10px;
             z-index: 1001;
         }
-       #copy-last-message {
+        #copy-last-message {
             padding: 10px 15px;
             background-color: #4CAF50;
             color: white;
@@ -52,7 +52,7 @@
             cursor: pointer;
             display: none;
         }
-         #copy-last-message:hover {
+       #copy-last-message:hover {
              background-color: #45a049;
         }
         #loginButton {
@@ -73,229 +73,235 @@
 <body>
     <h1>Welcome to Coze Web SDK Demo</h1>
     <div id="copy-button-container">
-       <button id="copy-last-message">复制最后一条消息</button>
+        <button id="copy-last-message">复制最后一条消息</button>
     </div>
-    <div id="chat-container"></div>
-    <button id="loginButton">Login to Coze</button>
+     <div id="chat-container"></div>
+     <button id="loginButton">Login to Coze</button>
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.1.0-beta.0/libs/oversea/index.js"></script>
     <script>
         let lastMessage = "";
         let isUserTurn = true;
 
-        const clientId = '60687738777037857803942829983166.app.coze';
+         const clientId = '60687738777037857803942829983166.app.coze';
         const redirectUri = encodeURIComponent('https://neil417352.github.io/my-test-site/');
-        const authUrl = 'https://www.coze.cn/oauth2/authorize';
+       const authUrl = 'https://www.coze.cn/oauth2/authorize';
         const tokenUrl = 'https://api.coze.cn/api/permission/oauth2/token';
 
         let accessToken = null;
         let refreshToken = null;
         let userId = null;
-        const authUtils = {
+
+
+          const authUtils = {
             generateCodeVerifier: function () {
-               const random = new Uint8Array(32);
-               window.crypto.getRandomValues(random);
+                const random = new Uint8Array(32);
+                 window.crypto.getRandomValues(random);
                 return btoa(String.fromCharCode.apply(null, random)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
             },
-             generateCodeChallenge: async function (codeVerifier) {
-                const buffer = new TextEncoder().encode(codeVerifier);
-                const digest = await window.crypto.subtle.digest('SHA-256', buffer);
-                 const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(digest)));
+            generateCodeChallenge: async function (codeVerifier) {
+               const buffer = new TextEncoder().encode(codeVerifier);
+               const digest = await window.crypto.subtle.digest('SHA-256', buffer);
+                const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(digest)));
                 return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-             },
-              initiateAuth: async function () {
-                 const codeVerifier = this.generateCodeVerifier();
-                const codeChallenge = await this.generateCodeChallenge(codeVerifier);
-                 const scope = "botChat getMetadata listConversation createConversation editConversation uploadFile listConversationMessage";
-                 const authParams = new URLSearchParams({
+            },
+            initiateAuth: async function () {
+               const codeVerifier = this.generateCodeVerifier();
+               const codeChallenge = await this.generateCodeChallenge(codeVerifier);
+                const scope = "botChat getMetadata listConversation createConversation editConversation uploadFile listConversationMessage";
+
+              const authParams = new URLSearchParams({
                     client_id: clientId,
                     redirect_uri: redirectUri,
-                    response_type: 'code',
+                   response_type: 'code',
                     scope: scope,
                     code_challenge: codeChallenge,
-                     code_challenge_method: 'S256',
-                });
-                 localStorage.setItem('codeVerifier', codeVerifier);
-                const authUrlWithParams = `${authUrl}?${authParams.toString()}`;
-                  console.log('Authorization URL:', authUrlWithParams);
+                    code_challenge_method: 'S256',
+               });
+                localStorage.setItem('codeVerifier', codeVerifier);
+               const authUrlWithParams = `${authUrl}?${authParams.toString()}`;
+               console.log('Authorization URL:', authUrlWithParams);
                 window.location.href = authUrlWithParams;
             },
-             handleAuthCallback: async function () {
-                  const urlParams = new URLSearchParams(window.location.search);
+            handleAuthCallback: async function () {
+                const urlParams = new URLSearchParams(window.location.search);
                 const code = urlParams.get('code');
-                if (code) {
-                  const codeVerifier = localStorage.getItem('codeVerifier');
-                     localStorage.removeItem('codeVerifier');
-                   try {
-                       const tokenResponse = await fetch(tokenUrl, {
-                           method: 'POST',
-                           headers: {
-                               'Content-Type': 'application/json'
-                          },
-                          body: JSON.stringify({
-                              client_id: clientId,
-                               grant_type: 'authorization_code',
-                               code: code,
-                             code_verifier: codeVerifier,
-                             redirect_uri: decodeURIComponent(redirectUri)
+
+               if (code) { //  确认当前地址有 code 参数，防止重复执行
+                   const codeVerifier = localStorage.getItem('codeVerifier');
+                    localStorage.removeItem('codeVerifier');
+                  try {
+                         const tokenResponse = await fetch(tokenUrl, {
+                            method: 'POST',
+                             headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                client_id: clientId,
+                                grant_type: 'authorization_code',
+                                code: code,
+                              code_verifier: codeVerifier,
+                                redirect_uri: decodeURIComponent(redirectUri)
                           })
-                       });
+                     });
 
-                       if (!tokenResponse.ok) {
-                           throw new Error(`HTTP error! status: ${tokenResponse.status}`);
-                       }
+                        if (!tokenResponse.ok) {
+                             throw new Error(`HTTP error! status: ${tokenResponse.status}`);
+                           }
 
-                         const data = await tokenResponse.json();
-                          accessToken = data.access_token;
-                         refreshToken = data.refresh_token;
-                         localStorage.setItem('accessToken', accessToken);
-                         localStorage.setItem('refreshToken', refreshToken);
-                           console.log('Access Token:', accessToken);
-                           console.log('Refresh Token:', refreshToken);
+                        const data = await tokenResponse.json();
+                         accessToken = data.access_token;
+                        refreshToken = data.refresh_token;
+                       localStorage.setItem('accessToken', accessToken);
+                       localStorage.setItem('refreshToken', refreshToken);
+                         console.log('Access Token:', accessToken);
+                       console.log('Refresh Token:', refreshToken);
+                          initChatBot();
 
-                          initChatBot()
 
-
-                     } catch (error) {
-                       console.error("获取token失败", error);
+                   } catch (error) {
+                         console.error("获取token失败", error);
                       }
-                }
-            },
-             refreshAccessToken: async function () {
-                 try {
-                       const refreshTokenFromStorage = localStorage.getItem('refreshToken');
-                       if (!refreshTokenFromStorage) {
-                           console.log('No refresh token found, initiating auth');
-                           await authUtils.initiateAuth(); // 重新授权
-                         return;
-                        }
-                      const tokenResponse = await fetch(tokenUrl, {
-                           method: 'POST',
-                            headers: {
-                              'Content-Type': 'application/json',
-                             },
-                          body: JSON.stringify({
-                               client_id: clientId,
+                 }
+           },
+            refreshAccessToken: async function () {
+                try {
+                    const refreshTokenFromStorage = localStorage.getItem('refreshToken');
+                   if (!refreshTokenFromStorage) {
+                        console.log('No refresh token found, initiating auth');
+                       await authUtils.initiateAuth()
+                       return;
+                   }
+
+                   const tokenResponse = await fetch(tokenUrl, {
+                      method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                      },
+                        body: JSON.stringify({
+                            client_id: clientId,
                              grant_type: 'refresh_token',
                            refresh_token: refreshTokenFromStorage
-                            })
-                      });
+                         })
+                  });
 
-                      if (!tokenResponse.ok) {
-                           throw new Error(`HTTP error! status: ${tokenResponse.status}`);
-                        }
-                         const data = await tokenResponse.json();
-                          accessToken = data.access_token;
-                        refreshToken = data.refresh_token;
-                         localStorage.setItem('accessToken', accessToken);
-                          localStorage.setItem('refreshToken', refreshToken);
-                         console.log('Access Token refreshed:', accessToken);
-                        console.log('Refresh Token refreshed:', refreshToken);
-                    } catch (error) {
-                       console.error("refreshToken error", error)
-                    }
-                },
-              getAccessToken: function() {
-                  return localStorage.getItem('accessToken')
-              },
-               clearToken: function() {
-                  localStorage.removeItem('accessToken')
-                  localStorage.removeItem('refreshToken')
-              }
+                    if (!tokenResponse.ok) {
+                        throw new Error(`HTTP error! status: ${tokenResponse.status}`);
+                       }
+
+                     const data = await tokenResponse.json();
+                       accessToken = data.access_token;
+                      refreshToken = data.refresh_token;
+                     localStorage.setItem('accessToken', accessToken);
+                    localStorage.setItem('refreshToken', refreshToken);
+                    console.log('Access Token refreshed:', accessToken);
+                     console.log('Refresh Token refreshed:', refreshToken);
+
+               } catch (error) {
+                    console.error("refreshToken error", error)
+                }
+            },
+            getAccessToken: function() {
+                return localStorage.getItem('accessToken')
+            },
+           clearToken: function() {
+                localStorage.removeItem('accessToken')
+                localStorage.removeItem('refreshToken')
+             }
         };
 
-        function generateUserId() {
+
+         function generateUserId() {
             const timestamp = new Date().getTime();
-           const random = Math.random().toString(36).substring(2, 15);
-            return `user-${timestamp}-${random}`;
+            const random = Math.random().toString(36).substring(2, 15);
+           return `user-${timestamp}-${random}`;
         }
 
-        async function initChatBot() {
-            userId = generateUserId()
-           const cozeWebSDK = new CozeWebSDK.WebChatClient({
+         async function initChatBot() {
+             userId = generateUserId()
+             const cozeWebSDK = new CozeWebSDK.WebChatClient({
                 config: {
-                    botId: '7446282665017655301',
-                },
+                   botId: '7446282665017655301',
+                 },
                  auth: {
                      type: 'token',
                       token: accessToken,
-                      onRefreshToken: async () => {
-                        await authUtils.refreshAccessToken()
-                         return authUtils.getAccessToken();
-                      },
-               },
-                  userInfo: {
-                     id: userId,
-                     url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png',
-                    nickname: 'User',
+                       onRefreshToken: async () => {
+                         await authUtils.refreshAccessToken()
+                          return authUtils.getAccessToken();
+                       },
                  },
-                   ui: {
-                        base: {
-                            zIndex: 1000,
-                            layout: 'pc'
-                        },
-                         chatBot: {
-                             title: 'Coze',
-                             el: document.getElementById('chat-container'),
-                            width: '100%',
-                             onShow: () => {
-                                const chatWindow = document.querySelector('.web-chat-container');
-                                   if (chatWindow) {
-                                         const observer = new MutationObserver(mutations => {
-                                             for (const mutation of mutations) {
-                                                  if (mutation.addedNodes) {
-                                                       mutation.addedNodes.forEach(node => {
-                                                            if(node.classList && node.classList.contains('coze-chat-message')) {
-                                                                if(node.classList.contains('coze-chat-message-from-user')) {
-                                                                   document.getElementById('copy-last-message').style.display = 'none';
-                                                                  isUserTurn = true;
-                                                               } else if(node.classList.contains('coze-chat-message-from-bot')) {
-                                                                 const contentNode = node.querySelector('.coze-chat-message-content');
-                                                                    if(contentNode) {
-                                                                       lastMessage = contentNode.textContent;
-                                                                    document.getElementById('copy-last-message').style.display = 'block';
-                                                                   isUserTurn = false;
-                                                                 }
-                                                              }
-                                                            }
-                                                       });
-                                               }
-                                           }
-                                        });
-                                        observer.observe(chatWindow, { childList: true, subtree: true });
-                                    }
-                           }
-                       }
+                 userInfo: {
+                    id: userId,
+                    url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png',
+                     nickname: 'User',
                  },
+                 ui: {
+                    base: {
+                        zIndex: 1000,
+                       layout: 'pc'
+                   },
+                      chatBot: {
+                         title: 'Coze',
+                          el: document.getElementById('chat-container'),
+                          width: '100%',
+                          onShow: () => {
+                              const chatWindow = document.querySelector('.web-chat-container');
+                              if (chatWindow) {
+                                  const observer = new MutationObserver(mutations => {
+                                       for (const mutation of mutations) {
+                                          if (mutation.addedNodes) {
+                                               mutation.addedNodes.forEach(node => {
+                                                 if(node.classList && node.classList.contains('coze-chat-message')) {
+                                                     if(node.classList.contains('coze-chat-message-from-user')) {
+                                                          document.getElementById('copy-last-message').style.display = 'none';
+                                                          isUserTurn = true;
+                                                       } else if(node.classList.contains('coze-chat-message-from-bot')) {
+                                                          const contentNode = node.querySelector('.coze-chat-message-content');
+                                                            if(contentNode) {
+                                                                lastMessage = contentNode.textContent;
+                                                              document.getElementById('copy-last-message').style.display = 'block';
+                                                            isUserTurn = false;
+                                                           }
+                                                     }
+                                                 }
+                                               });
+                                        }
+                                     }
+                                });
+                                  observer.observe(chatWindow, { childList: true, subtree: true });
+                               }
+                          }
+                     }
+                },
              });
 
-            document.getElementById('copy-last-message').addEventListener('click', () => {
-                if (lastMessage) {
-                      navigator.clipboard.writeText(lastMessage)
-                       .then(() => {
-                           console.log('文本复制成功');
-                       })
-                       .catch(err => {
-                         console.error('复制文本失败: ', err);
-                        });
-                  }
-              });
+              document.getElementById('copy-last-message').addEventListener('click', () => {
+                   if (lastMessage) {
+                        navigator.clipboard.writeText(lastMessage)
+                           .then(() => {
+                               console.log('文本复制成功');
+                            })
+                           .catch(err => {
+                                console.error('复制文本失败: ', err);
+                            });
+                    }
+               });
            }
 
-        document.getElementById('loginButton').addEventListener('click', async () => {
-             await authUtils.initiateAuth()
-       })
 
+         document.getElementById('loginButton').addEventListener('click', async () => {
+             await authUtils.initiateAuth();
+         });
 
+          async function init() {
+                const token = authUtils.getAccessToken();
+                if(token) {
+                   await initChatBot()
+                   }
+             await authUtils.handleAuthCallback(); //  处理授权回调
+          }
 
-        async function init() {
-            const token = authUtils.getAccessToken();
-            if(token) {
-                 await initChatBot()
-                }
-         authUtils.handleAuthCallback()
-       }
-
-       init();
+       init(); // 初始化
     </script>
 </body>
 </html>
