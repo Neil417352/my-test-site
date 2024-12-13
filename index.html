@@ -70,7 +70,7 @@
         const redirectUri = "https://neil417352.github.io/my-test-site/"; //  请替换为你的回调地址，必须与你在Coze平台配置的一致。
         const authorizationEndpoint = "https://www.coze.com/api/permission/oauth2/authorize";
         const tokenEndpoint = "https://api.coze.com/oauth/access_token";
-        const botId = "7446282665017655301"; //  请替换为你的机器人ID
+        const botId = "你的机器人ID"; //  7446282665017655301
         const apiEndpoint = "https://api.coze.com/v1/bot/chat";
 
 
@@ -116,7 +116,8 @@
                 code_challenge: codeChallenge,
                 code_challenge_method: "S256",
             });
-
+            console.log("Client ID:", clientId);  // 添加此行
+            console.log("Authorization URL:",  `${authorizationEndpoint}?${params.toString()}`); // 添加此行
             window.location.href = `${authorizationEndpoint}?${params.toString()}`;
 
         }
@@ -162,20 +163,17 @@
             }
           }
 
-
           function checkAndFetchToken() {
              const code = getCodeFromUrl();
-            if(code) {
-                fetchAccessToken(code);
-                 window.history.replaceState({}, document.title, window.location.pathname);
-            }
+             if(code) {
+                  fetchAccessToken(code);
+                   window.history.replaceState({}, document.title, window.location.pathname)
+             }
+          }
 
-         }
-        document.addEventListener('DOMContentLoaded', function() {
+          document.addEventListener('DOMContentLoaded', function() {
             checkAndFetchToken();
-         });
-
-
+          });
 
         async function sendMessage() {
              if (!accessToken) {
