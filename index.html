@@ -66,12 +66,12 @@
     </div>
 
     <script>
-        const clientId = "60687738777037857803942829983166.app.coze"; //  请替换为你的客户端ID
-         const redirectUri = "https://neil417352.github.io/my-test-site/"; //  请替换为你的回调地址，必须与你在Coze平台配置的一致。
+        const clientId = "你的客户端ID"; //  请替换为你的客户端ID
+        const redirectUri = "你的回调地址"; //  请替换为你的回调地址，必须与你在Coze平台配置的一致。
         const authorizationEndpoint = "https://www.coze.com/api/permission/oauth2/authorize";
         const tokenEndpoint = "https://api.coze.com/oauth/access_token";
-        const botId = "7446282665017655301"; //  请替换为你的机器人ID
-         const apiEndpoint = "https://api.coze.com/v1/bot/chat";
+        const botId = "你的机器人ID"; //  请替换为你的机器人ID
+        const apiEndpoint = "https://api.coze.com/v1/bot/chat";
 
 
         const chatContainer = document.getElementById("chat-container");
@@ -125,7 +125,9 @@
          // 从 URL 中提取授权码
         function getCodeFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get("code");
+            const code = urlParams.get("code");
+            console.log("Extracted code:", code); // 添加这一行
+            return code;
         }
 
         async function fetchAccessToken(code) {
@@ -136,6 +138,7 @@
                 redirect_uri: redirectUri,
                 code_verifier: codeVerifier
             });
+           console.log("fetchAccessToken request params:", params.toString()); // 添加此行
             try {
                 const response = await fetch(tokenEndpoint, {
                     method: "POST",
@@ -145,9 +148,11 @@
                     body: params.toString(),
                 });
                  const data = await response.json();
+                  console.log("fetchAccessToken response:", data);  // 添加此行
                  if (response.ok) {
                      accessToken = data.access_token;
                      chatContainer.style.display = "flex";
+                     console.log("Access token:", accessToken);  // 添加此行
                 } else {
                      console.error("Failed to fetch access token:", data);
                  }
@@ -157,14 +162,19 @@
             }
           }
 
-        function checkAndFetchToken() {
-           const code = getCodeFromUrl();
+
+          function checkAndFetchToken() {
+             const code = getCodeFromUrl();
             if(code) {
                 fetchAccessToken(code);
-                window.history.replaceState({}, document.title, window.location.pathname)
+                 window.history.replaceState({}, document.title, window.location.pathname);
             }
+
          }
-         checkAndFetchToken();
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAndFetchToken();
+         });
+
 
 
         async function sendMessage() {
