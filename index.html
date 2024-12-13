@@ -1,51 +1,34 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 智能助手</title>
     <style>
-        /* 保持现有样式 */
-        * {
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
         }
 
         #chat-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100vw;
-            height: 100vh;
-            background: white;
-            z-index: 1000;
+            width: 100%;
+            height: 100%;
         }
 
-        /* 复制按钮样式 */
         #copy-button {
             position: fixed;
             bottom: 20px;
             right: 20px;
             background: #007bff;
-            color: white;
+            color: #fff;
             border: none;
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 2000;
-            font-size: 14px;
             display: none; /* 初始隐藏 */
+            z-index: 1000;
         }
 
         #copy-button:hover {
@@ -54,15 +37,17 @@
     </style>
 </head>
 <body>
+    <!-- 聊天容器 -->
     <div id="chat-container"></div>
+    <!-- 复制按钮 -->
     <button id="copy-button">复制聊天内容</button>
 
-    <!-- Coze SDK -->
+    <!-- 引入 Coze Web SDK -->
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
     <script>
-        window.onload = function () {
-            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-            let chatContent = []; // 用于存储聊天内容
+        document.addEventListener('DOMContentLoaded', () => {
+            const messages = []; // 存储消息内容
+            const copyButton = document.getElementById('copy-button');
 
             // 初始化 Coze Web SDK
             const cozeWebSDK = new CozeWebSDK.WebChatClient({
@@ -74,45 +59,27 @@
                     title: 'AI 智能助手',
                     fullScreen: true
                 },
+                userInfo: {
+                    id: 'user123', // 用户唯一标识
+                    url: 'https://example.com/avatar.png', // 用户头像的 URL
+                    nickname: '用户昵称' // 用户昵称
+                },
                 onMessage: (message) => {
-                    // 捕获新消息内容
+                    console.log('接收到的消息:', message); // 调试日志
                     if (message && message.content) {
-                        chatContent.push(message.content);
-                        document.getElementById('copy-button').style.display = 'block'; // 显示复制按钮
+                        messages.push(message.content);
+                        copyButton.style.display = 'block'; // 显示复制按钮
                     }
                 }
             });
 
+            // 显示聊天框
             cozeWebSDK.showChatBot();
 
-            // 强制调整 iframe 大小
-            setTimeout(() => {
-                const iframes = document.querySelectorAll('iframe');
-                iframes.forEach(iframe => {
-                    iframe.style.width = '100vw';
-                    iframe.style.height = '100vh';
-                    iframe.style.position = 'fixed';
-                    iframe.style.top = '0';
-                    iframe.style.left = '0';
-                });
-            }, 1000);
-
-            // 处理移动端键盘
-            if (isMobile) {
-                window.addEventListener('resize', () => {
-                    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') {
-                        window.setTimeout(() => {
-                            document.activeElement.scrollIntoView();
-                        }, 0);
-                    }
-                });
-            }
-
             // 复制按钮逻辑
-            const copyButton = document.getElementById('copy-button');
             copyButton.addEventListener('click', () => {
-                if (chatContent.length > 0) {
-                    const textToCopy = chatContent.join('\n');
+                if (messages.length > 0) {
+                    const textToCopy = messages.join('\\n'); // 拼接所有消息
                     navigator.clipboard.writeText(textToCopy).then(() => {
                         alert('聊天内容已复制到剪贴板！');
                     }).catch(err => {
@@ -120,10 +87,10 @@
                         alert('复制失败，请重试！');
                     });
                 } else {
-                    alert('当前没有聊天内容可以复制。');
+                    alert('没有可复制的消息内容！');
                 }
             });
-        };
+        });
     </script>
 </body>
 </html>
