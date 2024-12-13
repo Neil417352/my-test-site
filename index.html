@@ -2,16 +2,9 @@
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
     <title>AI 智能助手</title>
     <style>
-        /* 保持现有样式 */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         html, body {
             width: 100%;
             height: 100%;
@@ -20,107 +13,69 @@
             padding: 0;
         }
 
+        /* 全屏容器，用于挂载聊天窗口 */
         #chat-container {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
             width: 100vw;
             height: 100vh;
-            background: white;
-            z-index: 1000;
-        }
-
-        /* 复制按钮样式 */
-        #copy-button {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            padding: 10px 20px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        #copy-button:hover {
-            background-color: #45a049;
+            background: #fff;
+            z-index: 1000; /* 可根据需要调整 */
         }
     </style>
 </head>
 <body>
     <div id="chat-container"></div>
-    <button id="copy-button">复制</button>
 
     <!-- 引入 Coze Web SDK -->
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
     <script>
-        // 初始化 Coze Web SDK
         const cozeWebSDK = new CozeWebSDK.WebChatClient({
             config: {
-                // 替换为您的 botId
-                botId: '7446348241379246085',
+                // '7446282665017655301'
+                botId: 'YOUR_BOT_ID',
             },
             auth: {
                 type: 'token',
-                // pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL
-                token: 'pat_YOUR_NEW_PAT',
-                onRefreshToken: () => 'pat_YOUR_NEW_PAT', // 您可以在这里实现获取新 token 的逻辑
+                //  '60687738777037857803942829983166.app.coze
+                token: 'YOUR_PAT_OR_OAUTH_TOKEN',
+                onRefreshToken: () => 'YOUR_PAT_OR_OAUTH_TOKEN'
             },
             userInfo: {
-                id: '12345', // 可选：用户 ID
-                url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png', // 用户头像 URL
+                id: 'user123',
+                url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png', // 可换成您自己的头像URL
                 nickname: 'UserA', // 用户昵称
             },
             ui: {
                 base: {
-                    icon: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png', // 聊天框图标
-                    layout: 'pc', // 布局方式：'pc' 或 'mobile'
-                    zIndex: 1000, // 层级
+                    // 使用 'mobile' 布局，使聊天窗口全屏显示
+                    layout: 'mobile',
+                    zIndex: 1000,
                 },
                 asstBtn: {
-                    isNeed: true, // 是否显示悬浮球
+                    // 隐藏右下角悬浮按钮，直接展示全屏聊天窗口
+                    isNeed: false
                 },
                 footer: {
+                    // 底部文字显示与否可根据需求调整
                     isShow: true,
-                    expressionText: 'Powered by {{name}}&{{name1}}',
+                    expressionText: 'Powered by {{name}}',
                     linkvars: {
-                        name: {
-                            text: 'Coze',
-                            link: 'https://www.coze.com'
-                        },
-                        name1: {
-                            text: '更多信息',
-                            link: 'https://www.coze.com/info'
-                        }
+                      name: {
+                        text: 'Coze',
+                        link: 'https://www.coze.com'
+                      }
                     }
                 },
                 chatBot: {
+                    // 将聊天窗口挂载到 #chat-container 中
+                    el: document.getElementById('chat-container'),
                     title: "AI 智能助手",
                     uploadable: true,
-                    width: 800,
-                    el: undefined,
-                    onHide: () => {
-                        console.log('聊天窗口已隐藏');
-                    },
-                    onShow: () => {
-                        console.log('聊天窗口已显示');
-                    },
+                    // 不再需要指定 width，因为我们采用全屏容器
                 },
             },
-        });
-
-        // 复制按钮功能示例
-        document.getElementById('copy-button').addEventListener('click', () => {
-            const chatContainer = document.getElementById('chat-container');
-            const textToCopy = '这是您要复制的内容';
-            navigator.clipboard.writeText(textToCopy).then(() => {
-                alert('内容已复制到剪贴板');
-            }).catch(err => {
-                console.error('复制失败: ', err);
-            });
         });
     </script>
 </body>
