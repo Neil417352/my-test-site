@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>AI 智能助手</title>
     <style>
         body, html {
@@ -27,8 +27,8 @@
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 1000;
             display: none; /* 初始隐藏 */
+            z-index: 1000;
         }
 
         #copy-button:hover {
@@ -52,7 +52,7 @@
             // 初始化 Coze Web SDK
             const cozeWebSDK = new CozeWebSDK.WebChatClient({
                 config: {
-                    bot_id: 'YOUR_BOT_ID', // 替换为实际的 Bot ID
+                    bot_id: '7446282665017655301', // 使用实际的 Bot ID
                     layout: 'full-screen'
                 },
                 componentProps: {
