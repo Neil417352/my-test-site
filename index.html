@@ -1,80 +1,73 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
-    <title>AI 智能助手</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coze Web SDK Demo</title>
     <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
+        body {
+            font-family: sans-serif;
+            margin: 0; /* 移除默认边距 */
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh; /* 确保至少占据整个视口高度 */
         }
-
-        /* 全屏容器，用于挂载聊天窗口 */
+        h1 {
+            margin-bottom: 30px;
+        }
         #chat-container {
-            position: fixed;
+            position: fixed; /* 固定定位 */
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: #fff;
-            z-index: 1000; /* 可根据需要调整 */
+            width: 100%;
+            height: 100%;
+            z-index: 1000; /* 确保在顶层 */
+            display: flex; /* 使用flex布局 */
+            align-items: center; /* 垂直居中 */
+            justify-content: center; /* 水平居中 */
+        }
+
+        /* 手机端样式 */
+        @media (max-width: 768px) {
+             #chat-container {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+             }
         }
     </style>
 </head>
 <body>
+    <h1>Welcome to Coze Web SDK Demo</h1>
     <div id="chat-container"></div>
-
-    <!-- 引入 Coze Web SDK -->
-    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
+    <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.1.0-beta.0/libs/oversea/index.js"></script>
     <script>
         const cozeWebSDK = new CozeWebSDK.WebChatClient({
             config: {
-                // '7446282665017655301'
-                botId: 'YOUR_BOT_ID',
+                botId: '7446282665017655301',
             },
-            auth: {
-                type: 'token',
-                //  '60687738777037857803942829983166.app.coze
-                token: 'YOUR_PAT_OR_OAUTH_TOKEN',
-                onRefreshToken: () => 'YOUR_PAT_OR_OAUTH_TOKEN'
+             auth:  {
+                 type: 'token',    
+                token: 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
+               onRefreshToken: () => 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
             },
-            userInfo: {
-                id: 'user123',
-                url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png', // 可换成您自己的头像URL
-                nickname: 'UserA', // 用户昵称
-            },
-            ui: {
+           ui: {
                 base: {
-                    // 使用 'mobile' 布局，使聊天窗口全屏显示
-                    layout: 'mobile',
                     zIndex: 1000,
+                    layout: 'pc'
                 },
-                asstBtn: {
-                    // 隐藏右下角悬浮按钮，直接展示全屏聊天窗口
-                    isNeed: false
-                },
-                footer: {
-                    // 底部文字显示与否可根据需求调整
-                    isShow: true,
-                    expressionText: 'Powered by {{name}}',
-                    linkvars: {
-                      name: {
-                        text: 'Coze',
-                        link: 'https://www.coze.com'
-                      }
-                    }
-                },
-                chatBot: {
-                    // 将聊天窗口挂载到 #chat-container 中
+               chatBot: {
+                    title: 'Coze',
                     el: document.getElementById('chat-container'),
-                    title: "AI 智能助手",
-                    uploadable: true,
-                    // 不再需要指定 width，因为我们采用全屏容器
-                },
+                    width: '100%',  // 设置为100%宽度，使chatbox占用整个container
+                    onShow: () => {
+                    // 当chatbox显示时,设置chatContainer样式全屏
+                    }
+                 }
             },
         });
     </script>
