@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="zh-CN">
 <head>
     <meta charset="utf-8">
@@ -67,25 +67,15 @@
             // 初始化 Coze Web SDK
             const cozeWebSDK = new CozeWebSDK.WebChatClient({
                 config: {
-                    bot_id: '7446348241379246085', // 使用最新提供的 Bot ID
+                    bot_id: '7446348241379246085',
                     layout: 'full-screen'
                 },
-                auth: {
-                    type: 'token',
-                    token: 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL' // 使用最新提供的 PAT
-                },
                 componentProps: {
-                    title: 'AI 智能助手',
+                    title: '德蓓教育AI助手',
                     fullScreen: true
-                },
-                userInfo: {
-                    id: 'user123', // 用户唯一标识
-                    url: 'https://example.com/avatar.png', // 用户头像 URL
-                    nickname: '用户昵称' // 用户昵称
                 },
                 onMessage: (message) => {
                     // 捕获新消息内容
-                    console.log('接收到的消息:', message);
                     if (message && message.content) {
                         chatContent.push(message.content);
                         document.getElementById('copy-button').style.display = 'block'; // 显示复制按钮
