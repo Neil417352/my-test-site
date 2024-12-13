@@ -67,12 +67,14 @@
     <script>
         let lastMessage = "";
         let isUserTurn = true;
-        // 生成唯一的用户ID
+
         function generateUserId() {
-            return 'user-' + Math.random().toString(36).substring(2, 15);
+             const timestamp = new Date().getTime();
+            const random = Math.random().toString(36).substring(2, 15);
+            return `user-${timestamp}-${random}`;
         }
 
-        const userId = generateUserId();
+        // 每次初始化都生成新的 userId
         const cozeWebSDK = new CozeWebSDK.WebChatClient({
             config: {
                 botId: '7446282665017655301',
@@ -82,10 +84,10 @@
                 token: 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
                 onRefreshToken: () => 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
             },
-             userInfo: {
-                 id: userId, // 使用生成的唯一ID
-                 url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png',
-                  nickname: 'User',
+            userInfo: {
+                id: generateUserId(), // 每次初始化都生成新的 userId
+                url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png',
+                 nickname: 'User',
             },
             ui: {
                 base: {
@@ -99,32 +101,32 @@
                     onShow: () => {
                         const chatWindow = document.querySelector('.web-chat-container');
                         if (chatWindow) {
-                           const observer = new MutationObserver(mutations => {
+                            const observer = new MutationObserver(mutations => {
                                 for (const mutation of mutations) {
-                                     if (mutation.addedNodes) {
-                                        mutation.addedNodes.forEach(node => {
-                                            if(node.classList && node.classList.contains('coze-chat-message')) {
+                                    if (mutation.addedNodes) {
+                                         mutation.addedNodes.forEach(node => {
+                                             if(node.classList && node.classList.contains('coze-chat-message')) {
                                                  if(node.classList.contains('coze-chat-message-from-user')) {
-                                                     document.getElementById('copy-last-message').style.display = 'none';
-                                                     isUserTurn = true;
-                                                 } else if(node.classList.contains('coze-chat-message-from-bot')) {
+                                                      document.getElementById('copy-last-message').style.display = 'none';
+                                                      isUserTurn = true;
+                                                  } else if(node.classList.contains('coze-chat-message-from-bot')) {
                                                        const contentNode = node.querySelector('.coze-chat-message-content');
-                                                       if(contentNode) {
+                                                        if(contentNode) {
                                                            lastMessage = contentNode.textContent;
                                                            document.getElementById('copy-last-message').style.display = 'block';
                                                            isUserTurn = false;
-                                                       }
+                                                        }
                                                  }
-                                            }
-                                        });
-                                    }
+                                              }
+                                         });
+                                     }
                                 }
-                           });
+                            });
 
                             observer.observe(chatWindow, { childList: true, subtree: true });
                         }
                     }
-                 }
+                }
             },
         });
 
@@ -132,10 +134,10 @@
             if (lastMessage) {
                 navigator.clipboard.writeText(lastMessage)
                 .then(() => {
-                     console.log('文本复制成功');
+                        console.log('文本复制成功');
                 })
                 .catch(err => {
-                    console.error('复制文本失败: ', err);
+                     console.error('复制文本失败: ', err);
                 });
             }
         });
