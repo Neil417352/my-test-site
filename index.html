@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KongBei AI Agent Demo</title>
+    <title>Coze Web SDK Demo</title>
     <style>
          body {
             font-family: sans-serif;
@@ -58,15 +58,21 @@
     </style>
 </head>
 <body>
-    <h1>Welcome to KongBei AI Agent Demo</h1>
+    <h1>Welcome to Coze Web SDK Demo</h1>
     <div id="copy-button-container">
-        <button id="copy-last-message">复制最后一条消息</button>
+         <button id="copy-last-message">复制最后一条消息</button>
     </div>
     <div id="chat-container"></div>
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.1.0-beta.0/libs/oversea/index.js"></script>
     <script>
         let lastMessage = "";
-        let isUserTurn = true; // 用于判断是否是用户回合
+        let isUserTurn = true;
+        // 生成唯一的用户ID
+        function generateUserId() {
+            return 'user-' + Math.random().toString(36).substring(2, 15);
+        }
+
+        const userId = generateUserId();
         const cozeWebSDK = new CozeWebSDK.WebChatClient({
             config: {
                 botId: '7446282665017655301',
@@ -74,7 +80,12 @@
              auth:  {
                  type: 'token',
                 token: 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
-               onRefreshToken: () => 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
+                onRefreshToken: () => 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
+            },
+             userInfo: {
+                 id: userId, // 使用生成的唯一ID
+                 url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png',
+                  nickname: 'User',
             },
             ui: {
                 base: {
@@ -82,7 +93,7 @@
                     layout: 'pc'
                 },
                 chatBot: {
-                    title: ' AI Friend Circle Agent',
+                    title: 'Coze',
                     el: document.getElementById('chat-container'),
                     width: '100%',
                     onShow: () => {
@@ -94,16 +105,14 @@
                                         mutation.addedNodes.forEach(node => {
                                             if(node.classList && node.classList.contains('coze-chat-message')) {
                                                  if(node.classList.contains('coze-chat-message-from-user')) {
-                                                       // 用户回合，隐藏复制按钮
                                                      document.getElementById('copy-last-message').style.display = 'none';
-                                                     isUserTurn = true; // 设置用户回合标识
+                                                     isUserTurn = true;
                                                  } else if(node.classList.contains('coze-chat-message-from-bot')) {
-                                                      // 机器人回合, 获取消息内容，并显示复制按钮
                                                        const contentNode = node.querySelector('.coze-chat-message-content');
                                                        if(contentNode) {
                                                            lastMessage = contentNode.textContent;
                                                            document.getElementById('copy-last-message').style.display = 'block';
-                                                           isUserTurn = false; // 设置机器人回合标识
+                                                           isUserTurn = false;
                                                        }
                                                  }
                                             }
