@@ -3,33 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KongBei PYQ Agent Demo</title>
+    <title>Coze Web SDK Demo</title>
     <style>
-        body {
+         body {
             font-family: sans-serif;
-            margin: 0; /* 移除默认边距 */
+            margin: 0;
             text-align: center;
             display: flex;
             flex-direction: column;
             align-items: center;
-            min-height: 100vh; /* 确保至少占据整个视口高度 */
+            min-height: 100vh;
         }
         h1 {
             margin-bottom: 30px;
         }
         #chat-container {
-            position: fixed; /* 固定定位 */
+             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1000; /* 确保在顶层 */
-            display: flex; /* 使用flex布局 */
-            align-items: center; /* 垂直居中 */
-            justify-content: center; /* 水平居中 */
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-
-        /* 手机端样式 */
         @media (max-width: 768px) {
              #chat-container {
                 position: fixed;
@@ -39,36 +37,98 @@
                 height: 100%;
              }
         }
+        #copy-button-container {
+             position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1001;
+        }
+        #copy-last-message {
+            padding: 10px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            display: none;
+        }
+        #copy-last-message:hover {
+             background-color: #45a049;
+        }
     </style>
 </head>
 <body>
-    <h1>Welcome to Kongbei AI</h1>
+    <h1>Welcome to Coze Web SDK Demo</h1>
+    <div id="copy-button-container">
+        <button id="copy-last-message">复制最后一条消息</button>
+    </div>
     <div id="chat-container"></div>
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.1.0-beta.0/libs/oversea/index.js"></script>
     <script>
+        let lastMessage = "";
+        let isUserTurn = true; // 用于判断是否是用户回合
         const cozeWebSDK = new CozeWebSDK.WebChatClient({
             config: {
                 botId: '7446282665017655301',
             },
              auth:  {
-                 type: 'token',    
+                 type: 'token',
                 token: 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
                onRefreshToken: () => 'pat_AhodpoOgh8NE0g3AQ4otLgfal6fnPbetJbcctl6LFeJZNL8Pc5ucjDK8nba2KCnL',
             },
-           ui: {
+            ui: {
                 base: {
                     zIndex: 1000,
                     layout: 'pc'
                 },
-               chatBot: {
-                    title: 'Friends circle Bot',
+                chatBot: {
+                    title: 'Coze',
                     el: document.getElementById('chat-container'),
-                    width: '100%',  // 设置为100%宽度，使chatbox占用整个container
+                    width: '100%',
                     onShow: () => {
-                    // 当chatbox显示时,设置chatContainer样式全屏
+                        const chatWindow = document.querySelector('.web-chat-container');
+                        if (chatWindow) {
+                           const observer = new MutationObserver(mutations => {
+                                for (const mutation of mutations) {
+                                     if (mutation.addedNodes) {
+                                        mutation.addedNodes.forEach(node => {
+                                            if(node.classList && node.classList.contains('coze-chat-message')) {
+                                                 if(node.classList.contains('coze-chat-message-from-user')) {
+                                                       // 用户回合，隐藏复制按钮
+                                                     document.getElementById('copy-last-message').style.display = 'none';
+                                                     isUserTurn = true; // 设置用户回合标识
+                                                 } else if(node.classList.contains('coze-chat-message-from-bot')) {
+                                                      // 机器人回合, 获取消息内容，并显示复制按钮
+                                                       const contentNode = node.querySelector('.coze-chat-message-content');
+                                                       if(contentNode) {
+                                                           lastMessage = contentNode.textContent;
+                                                           document.getElementById('copy-last-message').style.display = 'block';
+                                                           isUserTurn = false; // 设置机器人回合标识
+                                                       }
+                                                 }
+                                            }
+                                        });
+                                    }
+                                }
+                           });
+
+                            observer.observe(chatWindow, { childList: true, subtree: true });
+                        }
                     }
                  }
             },
+        });
+
+        document.getElementById('copy-last-message').addEventListener('click', () => {
+            if (lastMessage) {
+                navigator.clipboard.writeText(lastMessage)
+                .then(() => {
+                     console.log('文本复制成功');
+                })
+                .catch(err => {
+                    console.error('复制文本失败: ', err);
+                });
+            }
         });
     </script>
 </body>
