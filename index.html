@@ -18,7 +18,7 @@
             margin-bottom: 30px;
         }
         #chat-container {
-             position: fixed;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
@@ -29,21 +29,21 @@
             justify-content: center;
         }
         @media (max-width: 768px) {
-             #chat-container {
+            #chat-container {
                 position: fixed;
                 top: 0;
                 left: 0;
                 width: 100%;
                 height: 100%;
-             }
+            }
         }
-        #copy-button-container {
+         #copy-button-container {
              position: absolute;
             top: 10px;
             right: 10px;
             z-index: 1001;
         }
-        #copy-last-message {
+         #copy-last-message {
             padding: 10px 15px;
             background-color: #4CAF50;
             color: white;
@@ -56,7 +56,7 @@
              background-color: #45a049;
         }
         #loginButton {
-            padding: 10px 15px;
+             padding: 10px 15px;
             background-color: #4CAF50;
             color: white;
             border: none;
@@ -73,216 +73,220 @@
 <body>
     <h1>Welcome to Coze Web SDK Demo</h1>
     <div id="copy-button-container">
-       <button id="copy-last-message">复制最后一条消息</button>
+        <button id="copy-last-message">复制最后一条消息</button>
     </div>
     <div id="chat-container"></div>
-     <button id="loginButton">Login to Coze</button>
+      <button id="loginButton">Login to Coze</button>
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.1.0-beta.0/libs/oversea/index.js"></script>
     <script>
         let lastMessage = "";
-        let isUserTurn = true;
+         let isUserTurn = true;
 
-         const clientId = '60687738777037857803942829983166.app.coze';
-        const redirectUri = encodeURIComponent('https://neil417352.github.io/my-test-site/');
-        const authUrl = 'https://www.coze.cn/oauth2/authorize';
-        const tokenUrl = 'https://api.coze.cn/api/permission/oauth2/token';
+        const clientId = '60687738777037857803942829983166.app.coze';
+       const redirectUri = encodeURIComponent('https://neil417352.github.io/my-test-site/');
+       const authUrl = 'https://www.coze.cn/oauth2/authorize';
+      const tokenUrl = 'https://api.coze.cn/api/permission/oauth2/token';
 
         let accessToken = null;
-         let refreshToken = null;
-         let userId = null;
+        let refreshToken = null;
+        let userId = null;
 
-         function generateCodeVerifier() {
-              const random = new Uint8Array(32);
-            window.crypto.getRandomValues(random);
-           return btoa(String.fromCharCode.apply(null, random)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-          }
+          function generateCodeVerifier() {
+                const random = new Uint8Array(32);
+                 window.crypto.getRandomValues(random);
+                 return btoa(String.fromCharCode.apply(null, random)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        }
 
-          async function generateCodeChallenge(codeVerifier) {
+        async function generateCodeChallenge(codeVerifier) {
                const buffer = new TextEncoder().encode(codeVerifier);
                 const digest = await window.crypto.subtle.digest('SHA-256', buffer);
                 const base64 = btoa(String.fromCharCode.apply(null, new Uint8Array(digest)));
-             return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-        }
+                 return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+           }
 
-       function generateUserId() {
-            const timestamp = new Date().getTime();
-             const random = Math.random().toString(36).substring(2, 15);
-              return `user-${timestamp}-${random}`;
-        }
+          function generateUserId() {
+              const timestamp = new Date().getTime();
+                const random = Math.random().toString(36).substring(2, 15);
+             return `user-${timestamp}-${random}`;
+          }
 
 
-       async function initiateAuth() {
-           const codeVerifier = generateCodeVerifier();
-            const codeChallenge = await generateCodeChallenge(codeVerifier);
-            const scope = "botChat getMetadata listConversation createConversation editConversation uploadFile listConversationMessage";
+        async function initiateAuth() {
+              const codeVerifier = generateCodeVerifier();
+               const codeChallenge = await generateCodeChallenge(codeVerifier);
+              const scope = "botChat getMetadata listConversation createConversation editConversation uploadFile listConversationMessage";
 
-           const authParams = new URLSearchParams({
-               client_id: clientId,
+             const authParams = new URLSearchParams({
+                 client_id: clientId,
                 redirect_uri: redirectUri,
-                response_type: 'code',
+                  response_type: 'code',
                 scope: scope,
-                code_challenge: codeChallenge,
-                code_challenge_method: 'S256',
+                 code_challenge: codeChallenge,
+               code_challenge_method: 'S256',
             });
-           const authUrlWithParams = `${authUrl}?${authParams.toString()}`;
-             window.location.href = authUrlWithParams;
+
+            const authUrlWithParams = `${authUrl}?${authParams.toString()}`;
+           console.log('Authorization URL:', authUrlWithParams);
+            window.location.href = authUrlWithParams;
         }
 
 
-        async function handleAuthCallback() {
-             const urlParams = new URLSearchParams(window.location.search);
-            const code = urlParams.get('code');
-           if (code) {
-                 const codeVerifier = localStorage.getItem('codeVerifier');
-                localStorage.removeItem('codeVerifier');
-                try {
-                   const tokenResponse = await fetch(tokenUrl, {
+          async function handleAuthCallback() {
+               const urlParams = new URLSearchParams(window.location.search);
+              const code = urlParams.get('code');
+              if (code) {
+                  const codeVerifier = localStorage.getItem('codeVerifier');
+                 localStorage.removeItem('codeVerifier');
+                 try {
+                    const tokenResponse = await fetch(tokenUrl, {
                        method: 'POST',
                         headers: {
-                           'Content-Type': 'application/json'
-                        },
+                          'Content-Type': 'application/json'
+                       },
                         body: JSON.stringify({
                            client_id: clientId,
                             grant_type: 'authorization_code',
-                           code: code,
-                           code_verifier: codeVerifier,
-                            redirect_uri: decodeURIComponent(redirectUri)
-                       })
+                            code: code,
+                            code_verifier: codeVerifier,
+                             redirect_uri: decodeURIComponent(redirectUri)
+                        })
                     });
+                        if (!tokenResponse.ok) {
+                             throw new Error(`HTTP error! status: ${tokenResponse.status}`);
+                           }
+                           const data = await tokenResponse.json();
+                           accessToken = data.access_token;
+                           refreshToken = data.refresh_token;
+                           localStorage.setItem('accessToken', accessToken);
+                            localStorage.setItem('refreshToken', refreshToken);
+                          initChatBot()
 
-                     if (!tokenResponse.ok) {
-                           throw new Error(`HTTP error! status: ${tokenResponse.status}`);
-                     }
-                     const data = await tokenResponse.json();
-                     accessToken = data.access_token;
-                     refreshToken = data.refresh_token;
-                      localStorage.setItem('accessToken', accessToken);
-                       localStorage.setItem('refreshToken', refreshToken);
-                       initChatBot()
-                  } catch (error) {
-                       console.error("获取token失败", error);
-                   }
+                   } catch (error) {
+                      console.error("获取token失败", error);
+                 }
               }
-        }
+          }
 
-      async function refreshAccessToken() {
-           try {
+
+        async function refreshAccessToken() {
+             try {
                const refreshTokenFromStorage = localStorage.getItem('refreshToken');
-               if (!refreshTokenFromStorage) {
-                  initiateAuth()
-                 return
-               }
-
-               const tokenResponse = await fetch(tokenUrl, {
-                    method: 'POST',
+                 if (!refreshTokenFromStorage) {
+                     initiateAuth()
+                     return
+                 }
+                const tokenResponse = await fetch(tokenUrl, {
+                   method: 'POST',
                     headers: {
                        'Content-Type': 'application/json',
                    },
                     body: JSON.stringify({
                        client_id: clientId,
                         grant_type: 'refresh_token',
-                        refresh_token: refreshTokenFromStorage
+                       refresh_token: refreshTokenFromStorage
                     })
-                 });
+                  });
 
-               if (!tokenResponse.ok) {
-                   throw new Error(`HTTP error! status: ${tokenResponse.status}`);
-                  }
-                  const data = await tokenResponse.json();
-                    accessToken = data.access_token;
-                  refreshToken = data.refresh_token;
+                    if (!tokenResponse.ok) {
+                       throw new Error(`HTTP error! status: ${tokenResponse.status}`);
+                   }
+                 const data = await tokenResponse.json();
+                   accessToken = data.access_token;
+                   refreshToken = data.refresh_token;
                    localStorage.setItem('accessToken', accessToken);
-                    localStorage.setItem('refreshToken', refreshToken);
-           } catch (error) {
-                 console.error("refreshToken error", error)
-            }
-       }
-
-        function initChatBot() {
-            userId = generateUserId()
-               const cozeWebSDK = new CozeWebSDK.WebChatClient({
-                   config: {
-                       botId: '7446282665017655301',
-                    },
-                   auth: {
-                       type: 'token',
-                       token: accessToken,
-                       onRefreshToken: async () => {
-                         await refreshAccessToken()
-                             return  accessToken;
-                        },
-                    },
-                    userInfo: {
-                        id: userId,
-                         url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png',
-                        nickname: 'User',
-                     },
-                    ui: {
-                       base: {
-                         zIndex: 1000,
-                         layout: 'pc'
-                      },
-                        chatBot: {
-                            title: 'Coze',
-                            el: document.getElementById('chat-container'),
-                            width: '100%',
-                            onShow: () => {
-                                const chatWindow = document.querySelector('.web-chat-container');
-                                 if (chatWindow) {
-                                       const observer = new MutationObserver(mutations => {
-                                         for (const mutation of mutations) {
-                                            if (mutation.addedNodes) {
-                                                mutation.addedNodes.forEach(node => {
-                                                 if(node.classList && node.classList.contains('coze-chat-message')) {
-                                                     if(node.classList.contains('coze-chat-message-from-user')) {
-                                                        document.getElementById('copy-last-message').style.display = 'none';
-                                                       isUserTurn = true;
-                                                    } else if(node.classList.contains('coze-chat-message-from-bot')) {
-                                                           const contentNode = node.querySelector('.coze-chat-message-content');
-                                                            if(contentNode) {
-                                                                lastMessage = contentNode.textContent;
-                                                               document.getElementById('copy-last-message').style.display = 'block';
-                                                             isUserTurn = false;
-                                                         }
-                                                     }
-                                                }
-                                          });
-                                      }
-                                    }
-                               });
-
-                                 observer.observe(chatWindow, { childList: true, subtree: true });
-                            }
-                         }
-                     }
-               });
-
-
-             document.getElementById('copy-last-message').addEventListener('click', () => {
-                    if (lastMessage) {
-                          navigator.clipboard.writeText(lastMessage)
-                         .then(() => {
-                             console.log('文本复制成功');
-                         })
-                        .catch(err => {
-                            console.error('复制文本失败: ', err);
-                         });
-                    }
-               });
+                   localStorage.setItem('refreshToken', refreshToken);
+               } catch (error) {
+                    console.error("refreshToken error", error)
+             }
           }
 
+         function initChatBot() {
+             userId = generateUserId()
+              const cozeWebSDK = new CozeWebSDK.WebChatClient({
+                  config: {
+                      botId: '7446282665017655301',
+                   },
+                    auth: {
+                       type: 'token',
+                       token: accessToken,
+                      onRefreshToken: async () => {
+                         await refreshAccessToken()
+                           return  accessToken;
+                        },
+                   },
+                    userInfo: {
+                       id: userId,
+                        url: 'https://lf-coze-web-cdn.coze.cn/obj/coze-web-cn/obric/coze/favicon.1970.png',
+                       nickname: 'User',
+                    },
+                    ui: {
+                        base: {
+                           zIndex: 1000,
+                           layout: 'pc'
+                         },
+                        chatBot: {
+                           title: 'Coze',
+                            el: document.getElementById('chat-container'),
+                            width: '100%',
+                             onShow: () => {
+                                 const chatWindow = document.querySelector('.web-chat-container');
+                                 if (chatWindow) {
+                                     const observer = new MutationObserver(mutations => {
+                                         for (const mutation of mutations) {
+                                            if (mutation.addedNodes) {
+                                                 mutation.addedNodes.forEach(node => {
+                                                      if(node.classList && node.classList.contains('coze-chat-message')) {
+                                                        if(node.classList.contains('coze-chat-message-from-user')) {
+                                                                document.getElementById('copy-last-message').style.display = 'none';
+                                                            isUserTurn = true;
+                                                           } else if(node.classList.contains('coze-chat-message-from-bot')) {
+                                                               const contentNode = node.querySelector('.coze-chat-message-content');
+                                                             if(contentNode) {
+                                                                  lastMessage = contentNode.textContent;
+                                                                document.getElementById('copy-last-message').style.display = 'block';
+                                                                isUserTurn = false;
+                                                            }
+                                                        }
+                                                     }
+                                                 });
+                                          }
+                                     }
+                                  });
+                                    observer.observe(chatWindow, { childList: true, subtree: true });
+                                 }
+                           }
+                       }
+                    },
+                });
 
-        document.getElementById('loginButton').addEventListener('click', async () => {
-             const codeVerifier = generateCodeVerifier()
-            localStorage.setItem('codeVerifier',codeVerifier);
-              await initiateAuth()
-        })
-
-        handleAuthCallback();
-        const tokenStorage = localStorage.getItem('accessToken');
-      if(tokenStorage) {
-            initChatBot()
+               document.getElementById('copy-last-message').addEventListener('click', () => {
+                    if (lastMessage) {
+                         navigator.clipboard.writeText(lastMessage)
+                           .then(() => {
+                                 console.log('文本复制成功');
+                           })
+                           .catch(err => {
+                                console.error('复制文本失败: ', err);
+                            });
+                     }
+                 });
          }
+
+
+
+       document.getElementById('loginButton').addEventListener('click', async () => {
+            const codeVerifier = generateCodeVerifier()
+           localStorage.setItem('codeVerifier',codeVerifier);
+            await initiateAuth()
+       })
+
+
+          handleAuthCallback();
+          const tokenStorage = localStorage.getItem('accessToken');
+          if(tokenStorage) {
+                initChatBot()
+          }
+
     </script>
 </body>
 </html>
