@@ -1,34 +1,20 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI 智能助手</title>
     <style>
-        * {
+        body, html {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-        }
-
-        html, body {
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
         }
 
         #chat-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100vw;
-            height: 100vh;
-            background: white;
-            z-index: 1000;
+            width: 100%;
+            height: 100%;
         }
 
         #copy-button {
@@ -36,14 +22,13 @@
             bottom: 20px;
             right: 20px;
             background: #007bff;
-            color: white;
+            color: #fff;
             border: none;
             padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            z-index: 2000;
-            font-size: 14px;
             display: none; /* 初始隐藏 */
+            z-index: 1000;
         }
 
         #copy-button:hover {
@@ -52,52 +37,60 @@
     </style>
 </head>
 <body>
+    <!-- 聊天容器 -->
     <div id="chat-container"></div>
-    <button id="copy-button">复制聊天内容</button>
+    <!-- 复制按钮 -->
+    <button id="copy-button">复制对话内容</button>
 
-    <!-- Coze SDK -->
+    <!-- 引入 Coze Web SDK -->
     <script src="https://sf-cdn.coze.com/obj/unpkg-va/flow-platform/chat-app-sdk/1.0.0-beta.4/libs/oversea/index.js"></script>
     <script>
-        window.onload = function () {
-            let chatContent = []; // 用于存储聊天内容
+        document.addEventListener('DOMContentLoaded', () => {
+            const messages = []; // 存储消息内容
             const copyButton = document.getElementById('copy-button');
 
             // 初始化 Coze Web SDK
             const cozeWebSDK = new CozeWebSDK.WebChatClient({
                 config: {
-                    bot_id: '7446282665017655301',
+                    bot_id: '7446282665017655301', // 确保 bot_id 正确
                     layout: 'full-screen'
+                },
+                auth: {
+                    type: 'token',
+                    token: 'YOUR_VALID_ACCESS_TOKEN' // 替换为有效的 Access Token
                 },
                 componentProps: {
                     title: 'AI 智能助手',
                     fullScreen: true
                 },
                 onMessage: (message) => {
-                    console.log('接收到的消息:', message); // 调试日志
+                    // 捕获新消息并存储
                     if (message && message.content) {
-                        chatContent.push(message.content);
+                        messages.push(message.content);
+                        console.log('新消息:', message.content); // 调试输出
                         copyButton.style.display = 'block'; // 显示复制按钮
                     }
                 }
             });
 
+            // 显示聊天框
             cozeWebSDK.showChatBot();
 
-            // 复制按钮逻辑
+            // 复制按钮事件
             copyButton.addEventListener('click', () => {
-                if (chatContent.length > 0) {
-                    const textToCopy = chatContent.join('\\n');
+                if (messages.length > 0) {
+                    const textToCopy = messages.join('\\n'); // 拼接所有消息
                     navigator.clipboard.writeText(textToCopy).then(() => {
-                        alert('聊天内容已复制到剪贴板！');
+                        alert('对话内容已复制到剪贴板！');
                     }).catch(err => {
                         console.error('复制失败:', err);
                         alert('复制失败，请重试！');
                     });
                 } else {
-                    alert('当前没有聊天内容可以复制。');
+                    alert('没有可复制的消息内容！');
                 }
             });
-        };
+        });
     </script>
 </body>
 </html>
